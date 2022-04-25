@@ -1,0 +1,53 @@
+{
+  "type": [
+    "ShufflePatches"
+  ],
+  "blogs": [
+    14
+  ],
+  "target": [
+    6
+  ],
+  "dataset": [
+    "fashion"
+  ],
+  "model": [
+    "./Model/cnn_Fashion_mnist.h5"
+  ],
+  "nbr_classes": [
+    10
+  ],
+  "problem": [
+    "Alt"
+  ],
+  "epochs": [
+    500
+  ],
+  "population": [
+    1000
+  ],
+  "migration_rate": [
+    0
+  ],
+  "crossover": [
+    "uniform"
+  ],
+  "cx": [
+    "auto2"
+  ],
+  "mutation": [
+    "randomAugmentedPatch"
+  ],
+  "mut": [
+    "auto2"
+  ],
+  "algorithm": [
+    "NSGA2"
+  ],
+  "save": [
+    "./Results/Benchmark/Evo/fashion_me/6/"
+  ],
+  "sim": [
+    "me"
+  ]
+}

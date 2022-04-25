@@ -1,0 +1,53 @@
+{
+  "type": [
+    "ShufflePatches"
+  ],
+  "blogs": [
+    14
+  ],
+  "target": [
+    3258
+  ],
+  "dataset": [
+    "mnist"
+  ],
+  "model": [
+    "./Model/cnn_MNIST.h5"
+  ],
+  "nbr_classes": [
+    1
+  ],
+  "problem": [
+    "Alt"
+  ],
+  "epochs": [
+    100
+  ],
+  "population": [
+    1000
+  ],
+  "migration_rate": [
+    0
+  ],
+  "crossover": [
+    "uniform"
+  ],
+  "cx": [
+    "auto2"
+  ],
+  "mutation": [
+    "mutUniformInt"
+  ],
+  "mut": [
+    "auto2"
+  ],
+  "algorithm": [
+    "NSGA2"
+  ],
+  "save": [
+    "./Results/Mutation/MNIST_me/mutUniformInt/"
+  ],
+  "sim": [
+    "me"
+  ]
+}

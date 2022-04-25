@@ -1,0 +1,10 @@
+python VanLooveren_Counterfactual_classwise.py 0  MNIST #7
+python VanLooveren_Counterfactual_classwise.py 43 MNIST  #2
+python VanLooveren_Counterfactual_classwise.py 18 MNIST  #3
+python VanLooveren_Counterfactual_classwise.py 4  MNIST #4
+python VanLooveren_Counterfactual_classwise.py 8  MNIST #5
+python VanLooveren_Counterfactual_classwise.py 21 MNIST  #6
+python VanLooveren_Counterfactual_classwise.py 232 MNIST #8
+python VanLooveren_Counterfactual_classwise.py 7  MNIST #9
+python VanLooveren_Counterfactual_classwise.py 5  MNIST #1
+python VanLooveren_Counterfactual_classwise.py 3  MNIST #0
