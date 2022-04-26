@@ -28,12 +28,8 @@ from datetime import datetime
 ###########################Function Dict #######################################
 #################################################################################
 functions= {
-            'cifar':helper.load_cifar,
             'mnist':helper.load_mnist,
             'fashion':helper.load_fashion_mnist,
-            'catDog':helper.load_cat_vs_dog,
-            'chest': helper.load_chest_xray,
-            'chest_other':helper.load_other_data,
             'rgb': evoplus.RGBCrossover,
             'uniform':tools.cxUniform,
             'onepoint': tools.cxOnePoint,
@@ -43,7 +39,6 @@ functions= {
             'areacx':evoplus.area_crossover,
             'mutUniformInt':tools.mutUniformInt,
             'mutArea':evoplus.mutate_according_surrodings,
-            'steffenMut':evoplus.Steffen_mutate,
             'patchesMut':evoplus.patches_mutate,
             'Alt': MultiobjectiveProbIsland_Alternate_Sim.MyProblem,
             }
@@ -231,28 +226,17 @@ def main(procid, pipein, pipeout, sync,l,stoplog,f=None, seed=None):
         toolbox.register("mutate", evoplus.random_patch_mutate, patch_repo=deme)
     elif args.mutation[0] == 'randomAugmentedPatch':
         print('Main: Random Patch Mutate')
-        # TODO Eliminated indpb
         toolbox.register("mutate", evoplus.random_patch_mutate, original=equation_inputs, blogs=args.blogs[0],
                          shape=shape)
-        #helper.plot_images(deme,shape,16, procid)
-    #TODO Eingeschränkt auf quadarsiche Bilder !
-    #helper.plot_patches(deme, shape, 16, procid,patch_size=shape[1]//blogs)#, np.array(deme).shape[2])
-    #for i in deme:
-    #    check_image(i,procid,'population')
     paretohof=tools.ParetoFront(similar=evoplus.pareto_eq)
     hof= tools.HallOfFame(1,similar=evoplus.pareto_eq)
     logbook, mstats=problem.logging(tools)
     l.acquire()
     sync.set()
-    #print(np.array(ind).shape)
     for ind in deme:
         i=ind
         ind = helper.reshape_to_image(np.array(ind), shape=shape)
         i.fitness.values = toolbox.evaluate(ind.reshape(-1), target)
-    #for ind in deme:
-        #print('Ind_shape',np.array(ind).shape)
-    #    print(np.array(ind).shape)
-    #    ind.fitness.values = toolbox.evaluate(np.array(ind), target)
     deme = toolbox.select(deme, MU)
     l.release()
     record = mstats.compile(deme)
@@ -377,11 +361,6 @@ def main(procid, pipein, pipeout, sync,l,stoplog,f=None, seed=None):
 
 
 if __name__ == "__main__":
-
-    #TODO Hypervolume Log
-    #TODO UNDO
-    #multiprocessing.set_start_method('spawn')
-
     start = datetime.now()
 
     pickle.dump(equation_inputs,
@@ -389,31 +368,18 @@ if __name__ == "__main__":
                      'wb'))
     random.seed(64)
     NBR_DEMES = args.nbr_classes[0]-1
-    #multiprocessing.get_start_method()
-    #multiprocessing.set_start_method('forkserver', force=True)
-    #if NBR_DEMES !=0:
-    #try:
-    #TODO There was the need to eliminate this ?
-    #multiprocessing.set_start_method('spawn')
-    #except RuntimeError:
-    #    pass
-
 
     stoplog = multiprocessing.Array('i', NBR_DEMES)
     l = multiprocessing.RLock()
     pipes = [Queue(False) for _ in range(NBR_DEMES)]
-    #print(pipes)
-    #print(len(pipes))
+ 
     for p in pipes:
         print(p)
     pipes_in = deque(p for p in pipes)
     pipes_out = deque(p for p in pipes)
     pipes_in.rotate(1)
     pipes_out.rotate(-1)
-    #print(pipes_in)
-    #print(pipes_out)
     e = Event()
-    ###################Only Case for Hyperparameter##################################
     if NBR_DEMES==0:
         NBR_DEMES = 1
         stoplog = multiprocessing.Array('i', NBR_DEMES)

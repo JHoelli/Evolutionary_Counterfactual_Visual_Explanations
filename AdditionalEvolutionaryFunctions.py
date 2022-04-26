@@ -12,8 +12,6 @@ import Additional_Help_Functions as helper
 # Geometric Semantic CX https://kar.kent.ac.uk/69663/1/semantic-gp.pdf
 
 def augmented_mutate(ind1,shape=None):
-    #TODO How to cope with numpy arrays ?
-    #print('shape', shape)
     ind1=np.array(ind1)
     #print('IND1', ind1.shape)
     ind1 =ind1.reshape(shape[0],shape[1],shape[2])
@@ -31,7 +29,7 @@ def mutUniformInt_wrapper(ind1):
     return ind1,
 
 def adapt_dong_cross(f_a,f_b,mi,ma):
-    '''Implemented Accorfing to https://link.springer.com/content/pdf/10.1007%2F978-3-642-05253-8_16.pdf'''
+    '''Implemented According to https://link.springer.com/content/pdf/10.1007%2F978-3-642-05253-8_16.pdf'''
     cross = abs(f_a-f_b)/(ma-mi)
     return cross
 def adapt_dong_mut(f_a, f_b, mi, ma):
@@ -43,23 +41,16 @@ def adapt_fitness(f,f_larger,fmax,favg):
     '''
     if (f_larger >favg):
         cross=0.9-(0.3*(fmax-f_larger))/(fmax-favg)
-        #TODO How can it happen that all infos are identical?
-        #print(fmax)
-        #print(f)
-        #print(fmax)
-        #print(favg)
 
         mut = 0.1-((0.1-0.001)*(fmax-f))/(fmax-favg)
     else:
         cross=0.9
         mut=0.1
-    #print(cross)
-    #print(mut)
     return cross,mut
+
 def adapt_diversity(diversity,f,fmin,fmax):
     '''This is implemented according to McGinely2008'''
     cross=adaptive_crossover(diversity)
-    #mut= adaptive_mutation_individual(diversity,f,fmin,fmax)
     return cross#, mut
 
 def adaptive_mutation_individual(diversity,f,fmin,fmax, k=0.2):
@@ -72,14 +63,6 @@ def adaptive_mutation_individual(diversity,f,fmin,fmax, k=0.2):
         mut_fit=-(((f-fmin)/(fmax-fmin)*k)-k)
 
     mut = (mut_div+mut_fit)/2
-    if np.isnan(mut):
-        print('Mut IS NAN ')
-        #print('mut_div',mut_div)
-        print('mut_fit',mut_fit)
-        #print('diversity',diversity)
-        print('fmin', fmin)
-        print('fmax',fmax)
-        print('firness',f)
     return mut
 
 def adaptive_mutation(diversity, k=0.2):
@@ -386,36 +369,6 @@ def area_crossover_rgb(ind1, ind2,indpb, shape = (150,150,3)):
     ind2 = ind2.reshape(-1)
     ind2=ind2.tolist()
     ind2 = creator.Individual(ind2)
-
-
-    #size = min(len(ind1), len(ind2))
-    #dim= int(np.sqrt(size)/3)
-    #save1=ind1
-    #save2=ind2
-    #ind1=np.array(ind1).reshape(shape[0]*shape[1],shape[2])
-    #ind2 = np.array(ind1).reshape(shape[0]* shape[1],shape[2])
-    #x=random.randint(0,shape[0]-2)
-    #y=random.randint(0,shape[1]-2)
-
-    #start= x*(y+1)
-    #start2= x*(y+2)
-    #if random.random() < indpb:
-        #R
-        #ind1[start:start +2],ind2[start:start +2]=ind2[start:start +2],ind1[start:start +2]
-        #ind1[start2:start2 + 2], ind2[start2:start2 + 2] = ind2[start2:start2 + 2], ind1[start2:start2 + 2]
-        #G
-        #start =start+shape[0]+shape[1]
-        #start2 = start2 + shape[0] + shape[1]
-        #ind1[start:start + 2], ind2[start:start + 2] = ind2[start:start + 2], ind1[start:start + 2]
-        #ind1[start2:start2 + 2], ind2[start2:start2 + 2] = ind2[start2:start2 + 2], ind1[start2:start2 + 2]
-        #B
-        #start = start + shape[0] + shape[1]
-        #start2 = start2 + shape[0] + shape[1]
-        #ind1[start:start + 2], ind2[start:start + 2] = ind2[start:start + 2], ind1[start:start + 2]
-        #ind1[start2:start2 + 2], ind2[start2:start2 + 2] = ind2[start2:start2 + 2], ind1[start2:start2 + 2]
-
-    #print(save1.fitness)
-    #save2[:]=ind2.reshape(-1)
     return ind1, ind2
 
 def uniform_crossover_rgb(ind1, ind2,indpb, shape = (150,150,3)):
@@ -469,12 +422,6 @@ def mutate_augmentation_old(ind,shape):
     # seed = (2, 3)
     prob = 0.5
     single_image = data_augmentation(single_image)
-    # if random.uniform(0, 1) > prob:
-    # print('flip lr')
-    #    single_image = tf.image.random_flip_left_right(single_image)
-    # if random.uniform(0, 1) > prob:
-    # print('flip ud')
-    #    single_image = tf.image.random_flip_up_down(single_image)
     if shape[2] == 3:
         if random.uniform(0, 1) > prob:
             # print('hue')
@@ -484,30 +431,6 @@ def mutate_augmentation_old(ind,shape):
             single_image = tf.image.random_saturation(single_image, 0.6, 1.6)
     single_image = np.clip(single_image, 0, 255)
     return ind,
-
-def Steffen_mutate(individual):
-    '''add row at top or bottom '''
-    size = len(individual)
-    dim =int(np.sqrt(size))
-    #individual=np.array(individual)
-    #individual=individual.reshape(dim,dim)
-    if random.random() < 0.5:
-        for i in range(0,size-dim):
-            individual[i+dim]=individual[i]
-
-        for j in range(0,dim):
-            individual[j]=1
-    else:
-        for i in range(0,size-dim):
-            individual[size-dim-2]=individual[size-1]
-        for j in range(0,dim):
-            individual[size-j-1]=1
-        #individual[27]=np.ones(28)
-
-    #individual=individual.reshape(-1)
-
-    #a=individual
-    return individual,
 
 def mutate_according_surrodings(individual):
     '''add row at top or bottom '''
@@ -612,148 +535,3 @@ def pareto_eq(ind1, ind2):
 
         """
         return np.all(ind1.fitness.values == ind2.fitness.values)
-
-if __name__=='__main__':
-
-    import  Additional_Help_Functions as helper
-    _,_,x_test,_= helper.load_mnist()
-    #Visualize Initialization
-    #plt.figure(figsize=(14,14))
-    #plt.autoscale(tight='True')
-    #plt.imshow(x_test[0],cmap='gray')
-    #plt.xticks([])
-    #plt.yticks([])
-    #plt.savefig(f'./Vis/Initialization_Original.png', transparent=True, bbox_inches='tight')
-    #plt.close()
-
-    #patches = helper.data_augmentation_patch_based(x_test[0],(28,28,1),data_augmentation=False,shuffle=False,blogs=14)
-    #print(patches.shape)
-    #plt.figure(figsize=(14,14))
-    #plt.autoscale(tight='True')
-    #plt.tight_layout()
-    #num=1
-    #for i in patches:
-    #    plt.subplot(14, 14, num)
-    #    plt.imshow(i,cmap='gray')
-    #    num=num+1
-    #    plt.xticks([])
-    #    plt.yticks([])
-    #plt.savefig(f'./Vis/Patches.png', transparent=True, bbox_inches='tight')
-    #plt.close()
-
-    #patches = helper.data_augmentation_patch_based(x_test[0], (28, 28, 1), data_augmentation=False, shuffle=True,    blogs=14)
-    #print(patches.shape)
-    #plt.figure(figsize=(14,14))
-    #plt.autoscale(tight='True')
-    #plt.tight_layout()
-    #num = 1
-    #for i in patches:
-    #    plt.subplot(14, 14, num)
-    #    plt.imshow(i,cmap='gray')
-    #    num = num + 1
-    #    plt.xticks([])
-    #    plt.yticks([])
-    #plt.savefig(f'./Vis/Shuffled_Patches.png', transparent=True, bbox_inches='tight')
-    #plt.close()
-
-    #restructure = helper.reshape_to_image(patches, (28,28,1))
-    #plt.figure(figsize=(14,14))
-    #plt.autoscale(tight='True')
-    #plt.imshow(restructure[0],cmap='gray')
-    #plt.xticks([])
-    #plt.yticks([])
-    #plt.savefig(f'./Vis/Restructure.png', transparent=True, bbox_inches='tight')
-    #plt.close()
-
-    # Visualize Data Augmentation
-    shape=(28,28,1)
-    single_image=x_test[0]
-
-    data_augmentation = tf.keras.Sequential([
-        layers.experimental.preprocessing.RandomFlip("horizontal_and_vertical"),
-        layers.experimental.preprocessing.RandomRotation(0.2),
-        layers.experimental.preprocessing.RandomContrast(factor=(0.1, 1.3)),
-        layers.experimental.preprocessing.RandomZoom(height_factor=(-0.7, -0.2)),
-    ])
-    single_image=np.array(single_image).reshape(1,shape[0], shape[1], 1)
-    single_image=single_image.astype(int)
-    prob=0.5
-    single_image=data_augmentation(single_image)
-
-    plt.figure(figsize=(14,14))
-    plt.autoscale(tight='True')
-    plt.imshow(single_image[0], cmap='gray')
-    plt.xticks([])
-    plt.yticks([])
-    plt.savefig(f'./Vis/Manipulated_Image.png', transparent=True, bbox_inches='tight')
-    plt.close()
-
-    data_augmentation1 = tf.keras.Sequential([
-        layers.experimental.preprocessing.RandomFlip("horizontal_and_vertical"),
-    ])
-
-    single_image=x_test[0]
-
-    single_image = data_augmentation1(single_image.reshape(1,28,28,1))
-
-    print(single_image.shape)
-    plt.figure(figsize=(14, 14))#
-    plt.autoscale(tight='True')
-    plt.imshow(single_image[0], cmap='gray')
-    plt.xticks([])
-    plt.yticks([])
-    plt.savefig(f'./Vis/RandomFlip.png', transparent=True, bbox_inches='tight')
-    plt.close()
-
-    data_augmentation2 = tf.keras.Sequential([
-        layers.experimental.preprocessing.RandomRotation(0.2),
-    ])
-    single_image = x_test[0]
-
-    single_image = data_augmentation2(single_image.reshape(1,28,28,1))
-
-    plt.figure(figsize=(14, 14))
-    plt.autoscale(tight='True')
-    plt.imshow(single_image[0], cmap='gray')
-    plt.xticks([])
-    plt.yticks([])
-    plt.savefig(f'./Vis/RandomRotation.png', transparent=True, bbox_inches='tight')
-    plt.close()
-
-
-    data_augmentation3 = tf.keras.Sequential([
-        layers.experimental.preprocessing.RandomContrast(factor=(0.1, 1.3)),
-    ])
-    single_image = x_test[0]
-
-    single_image = data_augmentation3(single_image.reshape(1,28,28,1))
-
-    plt.figure(figsize=(14, 14))
-    plt.autoscale(tight='True')
-    plt.imshow(single_image[0], cmap='gray')
-    plt.xticks([])
-    plt.yticks([])
-    plt.savefig(f'./Vis/RandomContrast.png', transparent=True, bbox_inches='tight')
-    plt.close()
-
-    data_augmentation4 = tf.keras.Sequential([
-        layers.experimental.preprocessing.RandomZoom(height_factor=(-0.7, -0.2)),
-    ])
-    single_image = x_test[0]
-
-    single_image = data_augmentation4(single_image.reshape(1,28,28,1))
-
-    plt.figure(figsize=(14, 14))
-    plt.autoscale(tight='True')
-    plt.imshow(single_image[0], cmap='gray')
-    plt.xticks([])
-    plt.yticks([])
-    plt.savefig(f'./Vis/RandomZoom.png', transparent=True, bbox_inches='tight')
-    plt.close()
-
-    #if shape[2]==3:
-    #    if random.uniform(0, 1) > prob:
-    #        single_image = tf.image.random_hue(single_image, 0.08)
-    #    if random.uniform(0, 1) > prob:
-    #        single_image = tf.image.random_saturation(single_image, 0.6, 1.6)
-    #single_image = np.clip(single_image, 0, 255)
